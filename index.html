@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ЛДПР.Эко</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #003DA5;
+    --primary-dark: #002B75;
+    --accent: #FFD600;
+    --green: #2E7D32;
+    --green-light: #4CAF50;
+    --bg: #F0F4F0;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --text-light: #666;
+    --radius: 16px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== LOGIN SCREEN ===== */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 20px;
+  }
+
+  .login-logo {
+    width: 100px;
+    height: 100px;
+    background: var(--accent);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    font-size: 40px;
+  }
+
+  .login-title {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .login-subtitle {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    margin-bottom: 36px;
+  }
+
+  .login-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+
+  .login-card h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .input-group {
+    margin-bottom: 16px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #E0E0E0;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .input-group input:focus {
+    border-color: var(--primary);
+  }
+
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .btn-accent {
+    background: var(--accent);
+    color: var(--text);
+  }
+
+  .btn-green {
+    background: var(--green);
+    color: #fff;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+  }
+
+  .btn-small {
+    width: auto;
+    padding: 8px 18px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .btn-danger {
+    background: #D32F2F;
+    color: #fff;
+  }
+
+  .login-error {
+    color: #D32F2F;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .login-toggle {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  .login-toggle a {
+    color: var(--primary);
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* ===== APP SHELL ===== */
+  .app { display: none; }
+  .app.active { display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* Header */
+  .header {
+    background: var(--primary);
+    color: #fff;
+    padding: 16px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-logo {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .header-text h1 { font-size: 18px; font-weight: 800; line-height: 1.1; }
+  .header-text span { font-size: 11px; opacity: 0.7; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .points-badge {
+    background: var(--accent);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .logout-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* Content */
+  .content {
+    flex: 1;
+    padding: 0 0 80px 0;
+  }
+
+  /* Tab content */
+  .tab-page { display: none; }
+  .tab-page.active { display: block; }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0 12px;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+    z-index: 100;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-light);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 8px;
+    transition: color 0.2s;
+  }
+
+  .nav-item .nav-icon { font-size: 22px; }
+  .nav-item.active { color: var(--primary); }
+
+  /* ===== HOME TAB ===== */
+  .welcome-banner {
+    background: linear-gradient(135deg, var(--green) 0%, #1B5E20 100%);
+    color: #fff;
+    margin: 16px;
+    padding: 24px 20px;
+    border-radius: var(--radius);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .welcome-banner::after {
+    content: '🌿';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 60px;
+    opacity: 0.3;
+  }
+
+  .welcome-banner h2 { font-size: 20px; margin-bottom: 4px; }
+  .welcome-banner p { font-size: 13px; opacity: 0.85; max-width: 70%; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0 16px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+
+  .stat-card .stat-icon { font-size: 28px; margin-bottom: 6px; }
+  .stat-card .stat-value { font-size: 24px; font-weight: 800; color: var(--primary); }
+  .stat-card .stat-label { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    padding: 0 16px;
+    margin: 20px 0 12px;
+  }
+
+  /* Quick Actions */
+  .quick-actions {
+    display: flex;
+    gap: 10px;
+    padding: 0 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .quick-action {
+    flex: 0 0 auto;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    width: 110px;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.15s;
+  }
+
+  .quick-action:active { transform: scale(0.95); }
+  .quick-action .qa-icon { font-size: 30px; margin-bottom: 6px; }
+  .quick-action .qa-label { font-size: 11px; font-weight: 600; color: var(--text); }
+
+  /* ===== KEYS / POINTS TAB ===== */
+  .page-padding { padding: 16px; }
+
+  .key-input-section {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+
+  .key-input-section h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .key-input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .key-input-row input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 2px solid #E0E0E0;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: monospace;
+    letter-spacing: 1px;
+    outline: none;
+    text-transform: uppercase;
+  }
+
+  .key-input-row input:focus { border-color: var(--green); }
+
+  .key-result {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+
+  .key-result.success {
+    display: block;
+    background: #E8F5E9;
+    color: var(--green);
+  }
+
+  .key-result.error {
+    display: block;
+    background: #FFEBEE;
+    color: #D32F2F;
+  }
+
+  /* Admin Generate Keys */
+  .admin-section {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    border: 2px solid var(--accent);
+  }
+
+  .admin-badge {
+    background: var(--accent);
+    color: var(--text);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .generated-keys-list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .key-item {
+    background: #F5F5F5;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: monospace;
+    font-size: 14px;
+  }
+
+  .key-item .key-points {
+    background: var(--green);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .key-item .key-status {
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .key-item .key-status.used { color: #D32F2F; }
+  .key-item .key-status.available { color: var(--green); }
+
+  .copy-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  /* History */
+  .history-item {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .history-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .history-icon.earn { background: #E8F5E9; }
+  .history-icon.spend { background: #FFF3E0; }
+
+  .history-info { flex: 1; }
+  .history-info .history-title { font-size: 14px; font-weight: 600; }
+  .history-info .history-date { font-size: 11px; color: var(--text-light); }
+
+  .history-points {
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .history-points.positive { color: var(--green); }
+  .history-points.negative { color: #E65100; }
+
+  /* ===== SHOP TAB ===== */
+  .shop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .shop-item {
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .shop-item:active { transform: scale(0.97); }
+
+  .shop-item-image {
+    width: 100%;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+  }
+
+  .shop-item-info {
+    padding: 12px;
+  }
+
+  .shop-item-info h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .shop-item-info .shop-desc { font-size: 11px; color: var(--text-light); margin-bottom: 8px; line-height: 1.3; }
+
+  .shop-price {
+    background: var(--accent);
+    color: var(--text);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-block;
+  }
+
+  /* ===== NEWS TAB ===== */
+  .news-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    margin: 0 16px 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .news-image {
+    width: 100%;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+  }
+
+  .news-body { padding: 16px; }
+  .news-body .news-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .news-tag.event { background: #E3F2FD; color: #1565C0; }
+  .news-tag.announcement { background: #FFF3E0; color: #E65100; }
+  .news-tag.eco { background: #E8F5E9; color: var(--green); }
+
+  .news-body h3 { font-size: 16px; margin-bottom: 6px; line-height: 1.3; }
+  .news-body p { font-size: 13px; color: var(--text-light); line-height: 1.5; }
+  .news-date { font-size: 11px; color: #999; margin-top: 8px; }
+
+  /* ===== EVENTS TAB ===== */
+  .event-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    margin: 0 16px 12px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary);
+  }
+
+  .event-card .event-date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #E3F2FD;
+    color: #1565C0;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .event-card h3 {
+    font-size: 16px;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .event-card .event-desc {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .event-card .event-meta {
+    display: flex;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  .event-card .event-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .event-card .event-points-badge {
+    display: inline-block;
+    background: #E8F5E9;
+    color: var(--green);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+
+  /* ===== QUIZ TAB ===== */
+  .quiz-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    margin: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .quiz-progress {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+
+  .quiz-progress-dot {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: #E0E0E0;
+  }
+
+  .quiz-progress-dot.done { background: var(--green); }
+  .quiz-progress-dot.current { background: var(--primary); }
+
+  .quiz-question {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .quiz-option {
+    padding: 14px 16px;
+    border: 2px solid #E0E0E0;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
+    text-align: left;
+  }
+
+  .quiz-option:hover { border-color: var(--primary); }
+  .quiz-option.correct { border-color: var(--green); background: #E8F5E9; }
+  .quiz-option.wrong { border-color: #D32F2F; background: #FFEBEE; }
+  .quiz-option.disabled { pointer-events: none; opacity: 0.6; }
+
+  .quiz-result {
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .quiz-result .result-icon { font-size: 60px; margin-bottom: 12px; }
+  .quiz-result h3 { font-size: 22px; margin-bottom: 6px; }
+  .quiz-result p { color: var(--text-light); margin-bottom: 20px; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px 36px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-handle {
+    width: 40px;
+    height: 4px;
+    background: #DDD;
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+
+  .modal h3 { font-size: 18px; margin-bottom: 4px; }
+  .modal .modal-desc { color: var(--text-light); font-size: 13px; margin-bottom: 16px; }
+
+  .modal-item-preview {
+    text-align: center;
+    font-size: 80px;
+    margin-bottom: 12px;
+  }
+
+  .modal-price {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .modal-buttons .btn { flex: 1; }
+
+  /* Purchase code display */
+  .purchase-code-display {
+    background: #F5F5F5;
+    border: 2px dashed var(--green);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    margin: 16px 0;
+  }
+
+  .purchase-code-display .code-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .purchase-code-display .code-value {
+    font-family: monospace;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 2px;
+  }
+
+  .purchase-code-display .code-hint {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 10px;
+  }
+
+  /* Utility */
+  .text-center { text-align: center; }
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-12 { margin-bottom: 12px; }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+  }
+
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: #333;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 300;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Responsive */
+  @media (min-width: 480px) {
+    .content { max-width: 480px; margin: 0 auto; }
+    .bottom-nav { max-width: 480px; left: 50%; transform: translateX(-50%); border-radius: 16px 16px 0 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-logo">🌱</div>
+  <div class="login-title">ЛДПР.Эко</div>
+  <div class="login-subtitle">Экология начинается с тебя</div>
+  <div class="login-card" id="loginCard">
+    <h2>Вход в аккаунт</h2>
+    <div class="input-group">
+      <label>Логин</label>
+      <input type="text" id="loginInput" placeholder="Введите логин" autocomplete="off">
+    </div>
+    <div class="input-group">
+      <label>Пароль</label>
+      <input type="password" id="passwordInput" placeholder="Введите пароль">
+    </div>
+    <button class="btn btn-primary" onclick="login()">Войти</button>
+    <div class="login-error" id="loginError">Неверный логин или пароль</div>
+    <div class="login-toggle">
+      Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a>
+    </div>
+  </div>
+
+  <!-- REGISTER CARD -->
+  <div class="login-card" id="registerCard" style="display:none;">
+    <h2>Регистрация</h2>
+    <div class="input-group">
+      <label>Логин</label>
+      <input type="text" id="regLogin" placeholder="Придумайте логин" autocomplete="off">
+    </div>
+    <div class="input-group">
+      <label>Пароль</label>
+      <input type="password" id="regPassword" placeholder="Придумайте пароль">
+    </div>
+    <div class="input-group">
+      <label>Имя</label>
+      <input type="text" id="regName" placeholder="Ваше имя">
+    </div>
+    <div class="input-group">
+      <label>Возраст</label>
+      <input type="number" id="regAge" placeholder="Ваш возраст" min="1" max="120">
+    </div>
+    <button class="btn btn-green" onclick="register()">Зарегистрироваться</button>
+    <div class="login-error" id="registerError"></div>
+    <div class="login-toggle">
+      Уже есть аккаунт? <a onclick="showLogin()">Войти</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div class="app" id="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-logo">🌱</div>
+      <div class="header-text">
+        <h1>ЛДПР.Эко</h1>
+        <span id="headerRole">Пользователь</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="points-badge" id="pointsBadge">
+        <span>🌿</span>
+        <span id="headerPoints">0</span>
+      </div>
+      <button class="logout-btn" onclick="logout()" title="Выйти">⏻</button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="tab-page active" id="pageHome">
+      <div class="welcome-banner">
+        <h2 id="welcomeName">Привет!</h2>
+        <p>Копи эко-баллы, обменивай на мерч и помогай природе вместе с ЛДПР.Эко</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🌿</div>
+          <div class="stat-value" id="statPoints">0</div>
+          <div class="stat-label">Баллов</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-value" id="statLevel">Новичок</div>
+          <div class="stat-label">Уровень</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">♻️</div>
+          <div class="stat-value" id="statActions">0</div>
+          <div class="stat-label">Действий</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎁</div>
+          <div class="stat-value" id="statRedeemed">0</div>
+          <div class="stat-label">Наград</div>
+        </div>
+      </div>
+
+      <div class="section-title">Быстрые действия</div>
+      <div class="quick-actions">
+        <button class="quick-action" onclick="switchTab('points')">
+          <div class="qa-icon">🔑</div>
+          <div class="qa-label">Ввести ключ</div>
+        </button>
+        <button class="quick-action" onclick="switchTab('shop')">
+          <div class="qa-icon">🛍️</div>
+          <div class="qa-label">Магазин</div>
+        </button>
+        <button class="quick-action" onclick="switchTab('quiz')">
+          <div class="qa-icon">🧠</div>
+          <div class="qa-label">Эко-квиз</div>
+        </button>
+        <button class="quick-action" onclick="switchTab('events')">
+          <div class="qa-icon">📅</div>
+          <div class="qa-label">Расписание</div>
+        </button>
+        <button class="quick-action" onclick="switchTab('news')">
+          <div class="qa-icon">📰</div>
+          <div class="qa-label">Новости</div>
+        </button>
+      </div>
+
+      <div class="section-title">Последние действия</div>
+      <div class="page-padding" id="homeHistory">
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <p>Пока нет действий. Начните с ввода ключа!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- POINTS / KEYS -->
+    <div class="tab-page" id="pagePoints">
+      <div class="page-padding">
+
+        <!-- Admin: Generate Keys -->
+        <div class="admin-section" id="adminKeySection" style="display:none;">
+          <h3 style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            ⚙️ Генерация ключей <span class="admin-badge">АДМИН</span>
+          </h3>
+          <p style="font-size:13px;color:var(--text-light);margin-bottom:14px;">
+            Создайте ключи с баллами для выдачи пользователям за эко-активность.
+          </p>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <select id="keyPointsSelect" style="flex:1;padding:12px;border:2px solid #E0E0E0;border-radius:10px;font-size:14px;outline:none;">
+              <option value="10">10 баллов</option>
+              <option value="25">25 баллов</option>
+              <option value="50" selected>50 баллов</option>
+              <option value="100">100 баллов</option>
+              <option value="150">150 баллов</option>
+              <option value="200">200 баллов</option>
+              <option value="500">500 баллов</option>
+            </select>
+            <button class="btn btn-accent btn-small" onclick="generateKey()" style="white-space:nowrap;padding:12px 20px;">
+              Создать ключ
+            </button>
+          </div>
+          <button class="btn btn-outline btn-small mt-12" onclick="generateRandomKeys()" style="width:100%;">
+            🎲 Сгенерировать 10 случайных ключей
+          </button>
+          <div class="generated-keys-list" id="generatedKeysList"></div>
+        </div>
+
+        <!-- User: Enter Key -->
+        <div class="key-input-section">
+          <h3>🔑 Ввести ключ</h3>
+          <p style="font-size:13px;color:var(--text-light);margin-bottom:14px;">
+            Введите ключ, полученный от администратора за эко-активность
+          </p>
+          <div class="key-input-row">
+            <input type="text" id="keyInput" placeholder="XXXX-XXXX" maxlength="9" oninput="formatKeyInput(this)">
+            <button class="btn btn-green btn-small" onclick="redeemKey()">Активировать</button>
+          </div>
+          <div class="key-result" id="keyResult"></div>
+        </div>
+
+        <!-- History -->
+        <div class="section-title" style="padding:0;">📊 История начислений</div>
+        <div id="pointsHistory" class="mt-12">
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <p>История пуста</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHOP -->
+    <div class="tab-page" id="pageShop">
+      <div style="padding:16px 16px 0;">
+        <div style="background:linear-gradient(135deg,var(--accent),#FFC107);border-radius:var(--radius);padding:18px 20px;margin-bottom:4px;">
+          <div style="font-size:13px;font-weight:600;opacity:0.7;">Ваш баланс</div>
+          <div style="font-size:28px;font-weight:800;" id="shopBalance">0 🌿</div>
+        </div>
+      </div>
+      <div class="section-title">Доступные награды</div>
+      <div class="shop-grid" id="shopGrid"></div>
+    </div>
+
+    <!-- EVENTS -->
+    <div class="tab-page" id="pageEvents">
+      <div class="section-title" style="margin-top:16px;">📅 Расписание мероприятий</div>
+      <div id="eventsList"></div>
+    </div>
+
+    <!-- NEWS -->
+    <div class="tab-page" id="pageNews">
+      <div class="section-title" style="margin-top:16px;">📰 Новости и события</div>
+      <div id="newsList"></div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="tab-page" id="pageQuiz">
+      <div id="quizContainer"></div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
+      <span class="nav-icon">🏠</span>
+      Главная
+    </button>
+    <button class="nav-item" data-tab="points" onclick="switchTab('points')">
+      <span class="nav-icon">🔑</span>
+      Баллы
+    </button>
+    <button class="nav-item" data-tab="shop" onclick="switchTab('shop')">
+      <span class="nav-icon">🛍️</span>
+      Магазин
+    </button>
+    <button class="nav-item" data-tab="events" onclick="switchTab('events')">
+      <span class="nav-icon">📅</span>
+      События
+    </button>
+    <button class="nav-item" data-tab="news" onclick="switchTab('news')">
+      <span class="nav-icon">📰</span>
+      Новости
+    </button>
+    <button class="nav-item" data-tab="quiz" onclick="switchTab('quiz')">
+      <span class="nav-icon">🧠</span>
+      Квиз
+    </button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CLEAR ALL DATA ON PAGE LOAD (for demo/presentation) =====
+localStorage.removeItem('ldpr_eco_state');
+localStorage.removeItem('ldpr_eco_users');
+
+// ===== DATA =====
+// Default hardcoded admin account
+const DEFAULT_USERS = {
+  admin: { password: '123', role: 'admin', name: 'Администратор', age: null }
+};
+
+function getRegisteredUsers() {
+  const raw = localStorage.getItem('ldpr_eco_users');
+  if (!raw) {
+    const initial = JSON.parse(JSON.stringify(DEFAULT_USERS));
+    localStorage.setItem('ldpr_eco_users', JSON.stringify(initial));
+    return initial;
+  }
+  return JSON.parse(raw);
+}
+
+function saveRegisteredUsers(users) {
+  localStorage.setItem('ldpr_eco_users', JSON.stringify(users));
+}
+
+const SHOP_ITEMS = [
+  { id: 1, name: 'Футболка ЛДПР.Эко', desc: 'Хлопок 100%, экологичный принт', price: 200, icon: '👕', bg: 'linear-gradient(135deg,#E8F5E9,#A5D6A7)', isMerch: true },
+  { id: 2, name: 'Шоппер-сумка', desc: 'Многоразовая сумка из переработанных материалов', price: 100, icon: '🛍️', bg: 'linear-gradient(135deg,#E3F2FD,#90CAF9)', isMerch: true },
+  { id: 3, name: 'Термокружка', desc: 'Стальная кружка 350мл с символикой проекта', price: 300, icon: '☕', bg: 'linear-gradient(135deg,#FFF3E0,#FFCC80)', isMerch: true },
+  { id: 4, name: 'Куртка ЛДПР.Эко', desc: 'Утеплённая куртка с эко-символикой', price: 500, icon: '🧥', bg: 'linear-gradient(135deg,#F3E5F5,#CE93D8)', isMerch: true },
+  { id: 5, name: 'Билет на концерт Dead Blonde', desc: 'Билет на концерт', price: 1000, icon: '🎤', bg: 'linear-gradient(135deg,#FCE4EC,#F48FB1)', isMerch: false },
+  { id: 6, name: 'Эко-набор', desc: 'Многоразовые трубочки, приборы и контейнер', price: 150, icon: '🌿', bg: 'linear-gradient(135deg,#E8F5E9,#81C784)', isMerch: true },
+];
+
+const NEWS = [
+  {
+    tag: 'eco', tagLabel: 'Экология',
+    title: 'Новые пункты приёма вторсырья',
+    text: 'Открыты 12 новых партнёрских пунктов приёма сортированного мусора в Москве, Санкт-Петербурге и Казани. Сдавайте вторсырьё и получайте баллы в приложении!',
+    date: '1 июля 2025',
+    image: '♻️', imageBg: 'linear-gradient(135deg,#E8F5E9,#66BB6A)'
+  },
+  {
+    tag: 'event', tagLabel: 'Мероприятие',
+    title: 'Мастер-класс: Вторая жизнь вещей',
+    text: 'Бесплатный мастер-класс по апсайклингу — превращаем старую одежду в стильные аксессуары. 20 июля, коворкинг «Зелёная точка». Участникам — 50 баллов.',
+    date: '28 июня 2025',
+    image: '✂️', imageBg: 'linear-gradient(135deg,#FFF3E0,#FFB74D)'
+  },
+  {
+    tag: 'eco', tagLabel: 'Экология',
+    title: 'Результаты: 5 тонн мусора за месяц!',
+    text: 'Благодаря участникам ЛДПР.Эко за июнь собрано и переработано более 5 тонн вторсырья. Это эквивалент сохранения 85 деревьев. Спасибо каждому!',
+    date: '25 июня 2025',
+    image: '📊', imageBg: 'linear-gradient(135deg,#E8F5E9,#4CAF50)'
+  }
+];
+
+const EVENTS = [
+  {
+    title: 'Городской субботник «Чистый берег»',
+    desc: 'Масштабная уборка набережной совместно с волонтёрами. Перчатки и мешки предоставляем. После — чай и общение!',
+    date: '12 июля 2025',
+    time: '10:00 – 14:00',
+    location: 'Парк Горького, центральный вход',
+    points: 100,
+    icon: '🏖️'
+  },
+  {
+    title: 'Мастер-класс «Вторая жизнь вещей»',
+    desc: 'Учимся давать старым вещам вторую жизнь. Апсайклинг одежды в стильные аксессуары.',
+    date: '20 июля 2025',
+    time: '12:00 – 15:00',
+    location: 'Коворкинг «Зелёная точка», ул. Ленина 42',
+    points: 50,
+    icon: '✂️'
+  },
+  {
+    title: 'Лекция «Экология в большом городе»',
+    desc: 'Приглашённый эколог расскажет о простых привычках, которые помогают планете. Вход свободный.',
+    date: '27 июля 2025',
+    time: '18:00 – 19:30',
+    location: 'Библиотека им. Пушкина, зал 3',
+    points: 30,
+    icon: '🎓'
+  },
+  {
+    title: 'Посадка деревьев в Битцевском парке',
+    desc: 'Сажаем 200 молодых дубов и берёз. Инструменты и саженцы предоставляются.',
+    date: '3 августа 2025',
+    time: '09:00 – 13:00',
+    location: 'Битцевский парк, вход со стороны ул. Островитянова',
+    points: 120,
+    icon: '🌳'
+  },
+  {
+    title: 'Эко-квест по центру города',
+    desc: 'Командный квест с заданиями на экологическую тематику. Призы для победителей!',
+    date: '10 августа 2025',
+    time: '11:00 – 16:00',
+    location: 'Старт: Пушкинская площадь',
+    points: 80,
+    icon: '🗺️'
+  },
+  {
+    title: 'Концерт Мэйби Бэйби для участников программы',
+    desc: 'Закрытый концерт амбассадора проекта для самых активных участников ЛДПР.Эко.',
+    date: '17 августа 2025',
+    time: '19:00 – 22:00',
+    location: 'Клуб «Известия Hall»',
+    points: 0,
+    icon: '🎤'
+  },
+  {
+    title: 'Сбор батареек и электроники',
+    desc: 'Точка приёма старых батареек, аккумуляторов и мелкой электроники для безопасной утилизации.',
+    date: '24 августа 2025',
+    time: '10:00 – 18:00',
+    location: 'ТЦ «Мега», 1 этаж у главного входа',
+    points: 40,
+    icon: '🔋'
+  }
+];
+
+const QUIZ_QUESTIONS = [
+  {
+    q: 'Сколько лет разлагается пластиковая бутылка в природе?',
+    options: ['10–20 лет', '50–100 лет', '200–500 лет', '1000+ лет'],
+    correct: 2
+  },
+  {
+    q: 'Какой процент мирового океана загрязнён пластиком?',
+    options: ['5%', '15%', '40%', '88%'],
+    correct: 3
+  },
+  {
+    q: 'Что означает маркировка «PET 1» на пластике?',
+    options: ['Нельзя перерабатывать', 'Полиэтилентерефталат, перерабатываемый', 'Токсичный пластик', 'Биоразлагаемый материал'],
+    correct: 1
+  },
+  {
+    q: 'Сколько деревьев нужно для производства 1 тонны бумаги?',
+    options: ['2–4 дерева', '10–12 деревьев', '17–20 деревьев', '50+ деревьев'],
+    correct: 2
+  },
+  {
+    q: 'Какой газ является основным парниковым газом от деятельности человека?',
+    options: ['Кислород', 'Углекислый газ (CO₂)', 'Азот', 'Гелий'],
+    correct: 1
+  },
+  {
+    q: 'Что такое «апсайклинг»?',
+    options: ['Утилизация отходов', 'Переработка в менее качественный продукт', 'Творческое повторное использование вещей', 'Сжигание мусора'],
+    correct: 2
+  },
+  {
+    q: 'Какая страна лидирует по переработке отходов?',
+    options: ['США', 'Германия', 'Китай', 'Бразилия'],
+    correct: 1
+  }
+];
+
+// ===== STATE =====
+let currentUser = null;
+let currentRole = null;
+
+function getState() {
+  const raw = localStorage.getItem('ldpr_eco_state');
+  if (!raw) {
+    const users = getRegisteredUsers();
+    const usersState = {};
+    for (const username in users) {
+      usersState[username] = { points: 0, actions: 0, redeemed: 0, history: [], purchaseCodes: [] };
+    }
+    const initial = {
+      users: usersState,
+      keys: {},
+      quizCompleted: {}
+    };
+    localStorage.setItem('ldpr_eco_state', JSON.stringify(initial));
+    return initial;
+  }
+  return JSON.parse(raw);
+}
+
+function saveState(state) {
+  localStorage.setItem('ldpr_eco_state', JSON.stringify(state));
+}
+
+function ensureUserInState(username) {
+  const state = getState();
+  if (!state.users[username]) {
+    state.users[username] = { points: 0, actions: 0, redeemed: 0, history: [], purchaseCodes: [] };
+    saveState(state);
+  }
+  // Ensure purchaseCodes array exists for older data
+  if (!state.users[username].purchaseCodes) {
+    state.users[username].purchaseCodes = [];
+    saveState(state);
+  }
+}
+
+// ===== AUTH =====
+function showRegister() {
+  document.getElementById('loginCard').style.display = 'none';
+  document.getElementById('registerCard').style.display = 'block';
+  document.getElementById('registerError').style.display = 'none';
+}
+
+function showLogin() {
+  document.getElementById('registerCard').style.display = 'none';
+  document.getElementById('loginCard').style.display = 'block';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+function register() {
+  const login = document.getElementById('regLogin').value.trim().toLowerCase();
+  const password = document.getElementById('regPassword').value;
+  const name = document.getElementById('regName').value.trim();
+  const age = document.getElementById('regAge').value;
+  const errorEl = document.getElementById('registerError');
+
+  if (!login || !password || !name || !age) {
+    errorEl.textContent = 'Заполните все поля';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  if (login.length < 3) {
+    errorEl.textContent = 'Логин минимум 3 символа';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  if (password.length < 3) {
+    errorEl.textContent = 'Пароль минимум 3 символа';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const ageNum = parseInt(age);
+  if (isNaN(ageNum) || ageNum < 1 || ageNum > 120) {
+    errorEl.textContent = 'Укажите корректный возраст';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const users = getRegisteredUsers();
+  if (users[login]) {
+    errorEl.textContent = 'Пользователь с таким логином уже существует';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  users[login] = { password: password, role: 'user', name: name, age: ageNum };
+  saveRegisteredUsers(users);
+
+  // Also ensure state has this user
+  ensureUserInState(login);
+
+  errorEl.style.display = 'none';
+
+  // Clear fields
+  document.getElementById('regLogin').value = '';
+  document.getElementById('regPassword').value = '';
+  document.getElementById('regName').value = '';
+  document.getElementById('regAge').value = '';
+
+  showLogin();
+
+  // Pre-fill login field
+  document.getElementById('loginInput').value = login;
+  document.getElementById('passwordInput').focus();
+}
+
+function login() {
+  const username = document.getElementById('loginInput').value.trim().toLowerCase();
+  const password = document.getElementById('passwordInput').value;
+  const errorEl = document.getElementById('loginError');
+
+  const users = getRegisteredUsers();
+
+  if (users[username] && users[username].password === password) {
+    currentUser = username;
+    currentRole = users[username].role;
+    ensureUserInState(username);
+    errorEl.style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('active');
+    initApp();
+  } else {
+    errorEl.style.display = 'block';
+    errorEl.textContent = 'Неверный логин или пароль';
+  }
+}
+
+function logout() {
+  currentUser = null;
+  currentRole = null;
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginInput').value = '';
+  document.getElementById('passwordInput').value = '';
+  showLogin();
+  switchTab('home');
+}
+
+// ===== APP INIT =====
+function initApp() {
+  const users = getRegisteredUsers();
+  const user = users[currentUser];
+  document.getElementById('headerRole').textContent = currentRole === 'admin' ? '👑 Администратор' : '👤 Пользователь';
+  document.getElementById('welcomeName').textContent = `Привет, ${user.name}!`;
+
+  // Show admin section
+  document.getElementById('adminKeySection').style.display = currentRole === 'admin' ? 'block' : 'none';
+
+  updateUI();
+  renderShop();
+  renderNews();
+  renderEvents();
+  renderQuiz();
+  renderGeneratedKeys();
+}
+
+function updateUI() {
+  const state = getState();
+  const userData = state.users[currentUser];
+
+  document.getElementById('headerPoints').textContent = userData.points;
+  document.getElementById('statPoints').textContent = userData.points;
+  document.getElementById('statActions').textContent = userData.actions;
+  document.getElementById('statRedeemed').textContent = userData.redeemed;
+  document.getElementById('shopBalance').textContent = userData.points + ' 🌿';
+
+  // Level
+  let level = 'Новичок';
+  if (userData.points >= 1000) level = 'Эко-герой';
+  else if (userData.points >= 500) level = 'Эко-лидер';
+  else if (userData.points >= 200) level = 'Активист';
+  else if (userData.points >= 50) level = 'Участник';
+  document.getElementById('statLevel').textContent = level;
+
+  renderHistory();
+}
+
+// ===== TABS =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  document.getElementById('page' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  const navItem = document.querySelector(`.nav-item[data-tab="${tab}"]`);
+  if (navItem) navItem.classList.add('active');
+}
+
+// ===== KEY GENERATION (ADMIN) =====
+function generateKeyCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 8; i++) {
+    if (i === 4) code += '-';
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
+function generatePurchaseCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 12; i++) {
+    if (i === 4 || i === 8) code += '-';
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
+function generateKey() {
+  const points = parseInt(document.getElementById('keyPointsSelect').value);
+  const code = generateKeyCode();
+  const state = getState();
+  state.keys[code] = { points: points, used: false, createdBy: currentUser, createdAt: new Date().toISOString() };
+  saveState(state);
+  renderGeneratedKeys();
+  showToast(`Ключ ${code} создан (${points} баллов)`);
+}
+
+function generateRandomKeys() {
+  const state = getState();
+  const amounts = [10, 25, 50, 50, 100, 100, 150, 200, 200, 500];
+  amounts.forEach(pts => {
+    const code = generateKeyCode();
+    state.keys[code] = { points: pts, used: false, createdBy: currentUser, createdAt: new Date().toISOString() };
+  });
+  saveState(state);
+  renderGeneratedKeys();
+  showToast('10 случайных ключей сгенерировано!');
+}
+
+function renderGeneratedKeys() {
+  const container = document.getElementById('generatedKeysList');
+  if (!container) return;
+  const state = getState();
+  const keys = Object.entries(state.keys).sort((a, b) => new Date(b[1].createdAt) - new Date(a[1].createdAt));
+
+  if (keys.length === 0) {
+    container.innerHTML = '<div class="empty-state" style="padding:20px 0;"><p>Ключей пока нет</p></div>';
+    return;
+  }
+
+  container.innerHTML = keys.map(([code, data]) => `
+    <div class="key-item">
+      <div>
+        <span style="font-weight:700;">${code}</span>
+        <span class="key-status ${data.used ? 'used' : 'available'}">${data.used ? '✗ Использован' : '✓ Доступен'}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="key-points">${data.points} 🌿</span>
+        ${!data.used ? `<button class="copy-btn" onclick="copyKey('${code}')">Копировать</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function copyKey(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('Ключ скопирован!');
+  }).catch(() => {
+    const input = document.createElement('input');
+    input.value = code;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
+    showToast('Ключ скопирован!');
+  });
+}
+
+// ===== KEY REDEMPTION =====
+function formatKeyInput(el) {
+  let v = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (v.length > 4) v = v.slice(0, 4) + '-' + v.slice(4, 8);
+  el.value = v;
+}
+
+function redeemKey() {
+  const input = document.getElementById('keyInput');
+  const resultEl = document.getElementById('keyResult');
+  const code = input.value.toUpperCase().trim();
+
+  if (code.length < 9) {
+    resultEl.className = 'key-result error';
+    resultEl.textContent = 'Введите полный ключ формата XXXX-XXXX';
+    return;
+  }
+
+  const state = getState();
+  const keyData = state.keys[code];
+
+  if (!keyData) {
+    resultEl.className = 'key-result error';
+    resultEl.textContent = '❌ Ключ не найден';
+    return;
+  }
+
+  if (keyData.used) {
+    resultEl.className = 'key-result error';
+    resultEl.textContent = '❌ Этот ключ уже был использован';
+    return;
+  }
+
+  // Redeem
+  state.keys[code].used = true;
+  state.keys[code].usedBy = currentUser;
+  state.users[currentUser].points += keyData.points;
+  state.users[currentUser].actions += 1;
+  state.users[currentUser].history.unshift({
+    type: 'earn',
+    title: 'Активация ключа',
+    description: `Ключ: ${code}`,
+    points: keyData.points,
+    date: new Date().toISOString()
+  });
+  saveState(state);
+
+  resultEl.className = 'key-result success';
+  resultEl.textContent = `✅ Начислено ${keyData.points} баллов!`;
+  input.value = '';
+
+  updateUI();
+  renderGeneratedKeys();
+  showToast(`+${keyData.points} 🌿 баллов!`);
+}
+
+// ===== HISTORY =====
+function renderHistory() {
+  const state = getState();
+  const history = state.users[currentUser].history;
+
+  const renderItems = (items) => {
+    if (items.length === 0) {
+      return '<div class="empty-state"><div class="empty-icon">📋</div><p>История пуста</p></div>';
+    }
+    return items.map(h => {
+      const isEarn = h.type === 'earn';
+      const date = new Date(h.date);
+      const dateStr = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+      return `
+        <div class="history-item">
+          <div class="history-icon ${isEarn ? 'earn' : 'spend'}">${isEarn ? '📥' : '🎁'}</div>
+          <div class="history-info">
+            <div class="history-title">${h.title}</div>
+            <div class="history-date">${h.description} · ${dateStr}</div>
+          </div>
+          <div class="history-points ${isEarn ? 'positive' : 'negative'}">${isEarn ? '+' : '-'}${h.points}</div>
+        </div>
+      `;
+    }).join('');
+  };
+
+  document.getElementById('pointsHistory').innerHTML = renderItems(history);
+  document.getElementById('homeHistory').innerHTML = renderItems(history.slice(0, 3));
+}
+
+// ===== SHOP =====
+function renderShop() {
+  const grid = document.getElementById('shopGrid');
+  grid.innerHTML = SHOP_ITEMS.map(item => `
+    <div class="shop-item" onclick="openShopModal(${item.id})">
+      <div class="shop-item-image" style="background:${item.bg}">${item.icon}</div>
+      <div class="shop-item-info">
+        <h4>${item.name}</h4>
+        <div class="shop-desc">${item.desc}</div>
+        <span class="shop-price">${item.price} 🌿</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openShopModal(id) {
+  const item = SHOP_ITEMS.find(i => i.id === id);
+  const state = getState();
+  const userPoints = state.users[currentUser].points;
+  const canAfford = userPoints >= item.price;
+
+  const modal = document.getElementById('modal');
+  modal.innerHTML = `
+    <div class="modal-handle"></div>
+    <div class="modal-item-preview">${item.icon}</div>
+    <h3 style="text-align:center;">${item.name}</h3>
+    <p class="modal-desc" style="text-align:center;">${item.desc}</p>
+    <div class="modal-price">
+      <span class="shop-price" style="font-size:16px;padding:8px 16px;">${item.price} 🌿</span>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--text-light);margin-bottom:20px;">
+      Ваш баланс: <strong>${userPoints}</strong> 🌿 ${!canAfford ? '<br><span style="color:#D32F2F;">Недостаточно баллов</span>' : ''}
+    </p>
+    <div class="modal-buttons">
+      <button class="btn btn-outline" onclick="closeModal()">Отмена</button>
+      <button class="btn btn-green" onclick="purchaseItem(${item.id})" ${!canAfford ? 'disabled style="opacity:0.4;pointer-events:none;"' : ''}>
+        Обменять
+      </button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function purchaseItem(id) {
+  const item = SHOP_ITEMS.find(i => i.id === id);
+  const state = getState();
+  const purchaseCode = generatePurchaseCode();
+
+  state.users[currentUser].points -= item.price;
+  state.users[currentUser].redeemed += 1;
+  if (!state.users[currentUser].purchaseCodes) state.users[currentUser].purchaseCodes = [];
+  state.users[currentUser].purchaseCodes.unshift({
+    code: purchaseCode,
+    item: item.name,
+    date: new Date().toISOString()
+  });
+  state.users[currentUser].history.unshift({
+    type: 'spend',
+    title: `Обмен: ${item.name}`,
+    description: `Код: ${purchaseCode}`,
+    points: item.price,
+    date: new Date().toISOString()
+  });
+  saveState(state);
+
+  // Show purchase code in modal
+  const modal = document.getElementById('modal');
+  modal.innerHTML = `
+    <div class="modal-handle"></div>
+    <div style="text-align:center;font-size:48px;margin-bottom:12px;">🎉</div>
+    <h3 style="text-align:center;">Готово!</h3>
+    <p class="modal-desc" style="text-align:center;">Вы обменяли баллы на <strong>${item.name}</strong></p>
+    <div class="purchase-code-display">
+      <div class="code-label">Ваш код получения</div>
+      <div class="code-value">${purchaseCode}</div>
+      <div class="code-hint">Покажите этот код работнику для получения товара</div>
+    </div>
+    <div class="modal-buttons">
+      <button class="btn btn-primary" onclick="copyPurchaseCode('${purchaseCode}')">📋 Скопировать код</button>
+    </div>
+    <div style="margin-top:10px;">
+      <button class="btn btn-outline" onclick="closeModal()" style="width:100%;">Закрыть</button>
+    </div>
+  `;
+
+  updateUI();
+  showToast(`🎉 ${item.name} — ваш!`);
+}
+
+function copyPurchaseCode(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('Код скопирован!');
+  }).catch(() => {
+    const input = document.createElement('input');
+    input.value = code;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
+    showToast('Код скопирован!');
+  });
+}
+
+function closeModal(event) {
+  if (event && event.target !== event.currentTarget) return;
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+// ===== NEWS =====
+function renderNews() {
+  const list = document.getElementById('newsList');
+  list.innerHTML = NEWS.map(n => `
+    <div class="news-card">
+      <div class="news-image" style="background:${n.imageBg}">${n.image}</div>
+      <div class="news-body">
+        <span class="news-tag ${n.tag}">${n.tagLabel}</span>
+        <h3>${n.title}</h3>
+        <p>${n.text}</p>
+        <div class="news-date">${n.date}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== EVENTS =====
+function renderEvents() {
+  const list = document.getElementById('eventsList');
+  list.innerHTML = EVENTS.map(e => `
+    <div class="event-card">
+      <div class="event-date-badge">📅 ${e.date}</div>
+      <h3>${e.icon} ${e.title}</h3>
+      <p class="event-desc">${e.desc}</p>
+      <div class="event-meta">
+        <span>🕐 ${e.time}</span>
+        <span>📍 ${e.location}</span>
+      </div>
+      ${e.points > 0 ? `<div class="event-points-badge">+${e.points} 🌿 за участие</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ===== QUIZ =====
+let quizState = { current: 0, score: 0, answered: false };
+
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  const state = getState();
+
+  if (state.quizCompleted && state.quizCompleted[currentUser]) {
+    container.innerHTML = `
+      <div class="quiz-card">
+        <div class="quiz-result">
+          <div class="result-icon">🎓</div>
+          <h3>Квиз пройден!</h3>
+          <p>Вы уже прошли эко-квиз и получили баллы.</p>
+          <button class="btn btn-outline" onclick="resetQuiz()">Пройти заново</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  quizState = { current: 0, score: 0, answered: false };
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const container = document.getElementById('quizContainer');
+  const q = QUIZ_QUESTIONS[quizState.current];
+  const total = QUIZ_QUESTIONS.length;
+
+  container.innerHTML = `
+    <div class="quiz-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:13px;color:var(--text-light);font-weight:600;">Вопрос ${quizState.current + 1} из ${total}</span>
+        <span style="font-size:13px;font-weight:700;color:var(--green);">✓ ${quizState.score}</span>
+      </div>
+      <div class="quiz-progress">
+        ${Array.from({length: total}, (_, i) =>
+          `<div class="quiz-progress-dot ${i < quizState.current ? 'done' : i === quizState.current ? 'current' : ''}"></div>`
+        ).join('')}
+      </div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt, i) =>
+          `<button class="quiz-option" onclick="answerQuiz(${i}, ${q.correct})">${opt}</button>`
+        ).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function answerQuiz(selected, correct) {
+  if (quizState.answered) return;
+  quizState.answered = true;
+
+  const options = document.querySelectorAll('.quiz-option');
+  options.forEach((opt, i) => {
+    if (i === correct) opt.classList.add('correct');
+    else if (i === selected && i !== correct) opt.classList.add('wrong');
+    opt.classList.add('disabled');
+  });
+
+  if (selected === correct) quizState.score++;
+
+  setTimeout(() => {
+    quizState.current++;
+    quizState.answered = false;
+
+    if (quizState.current >= QUIZ_QUESTIONS.length) {
+      finishQuiz();
+    } else {
+      renderQuizQuestion();
+    }
+  }, 1200);
+}
+
+function finishQuiz() {
+  const container = document.getElementById('quizContainer');
+  const total = QUIZ_QUESTIONS.length;
+  const score = quizState.score;
+  const bonusPoints = score * 15;
+
+  // Save
+  const state = getState();
+  state.users[currentUser].points += bonusPoints;
+  state.users[currentUser].actions += 1;
+  state.users[currentUser].history.unshift({
+    type: 'earn',
+    title: 'Эко-квиз пройден',
+    description: `Результат: ${score}/${total}`,
+    points: bonusPoints,
+    date: new Date().toISOString()
+  });
+  if (!state.quizCompleted) state.quizCompleted = {};
+  state.quizCompleted[currentUser] = true;
+  saveState(state);
+
+  let emoji = '🎉';
+  let message = 'Отличный результат!';
+  if (score <= 2) { emoji = '📚'; message = 'Есть куда расти!'; }
+  else if (score <= 4) { emoji = '👍'; message = 'Хороший результат!'; }
+  else if (score <= 6) { emoji = '🌟'; message = 'Отличные знания!'; }
+  else { emoji = '🏆'; message = 'Идеально! Вы эко-эксперт!'; }
+
+  container.innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-result">
+        <div class="result-icon">${emoji}</div>
+        <h3>${message}</h3>
+        <p>Правильных ответов: <strong>${score}</strong> из <strong>${total}</strong></p>
+        <div style="background:var(--accent);border-radius:12px;padding:14px;margin-bottom:20px;">
+          <div style="font-size:13px;font-weight:600;opacity:0.7;">Начислено баллов</div>
+          <div style="font-size:28px;font-weight:800;">+${bonusPoints} 🌿</div>
+        </div>
+        <button class="btn btn-primary" onclick="switchTab('home')">На главную</button>
+      </div>
+    </div>
+  `;
+
+  updateUI();
+  showToast(`+${bonusPoints} 🌿 за квиз!`);
+}
+
+function resetQuiz() {
+  const state = getState();
+  if (!state.quizCompleted) state.quizCompleted = {};
+  state.quizCompleted[currentUser] = false;
+  saveState(state);
+  renderQuiz();
+}
+
+// ===== TOAST =====
+function showToast(text) {
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ===== ENTER KEY ON LOGIN =====
+document.getElementById('passwordInput').addEventListener('keyup', function(e) {
+  if (e.key === 'Enter') login();
+});
+document.getElementById('loginInput').addEventListener('keyup', function(e) {
+  if (e.key === 'Enter') document.getElementById('passwordInput').focus();
+});
+// Register enter keys
+document.getElementById('regAge').addEventListener('keyup', function(e) {
+  if (e.key === 'Enter') register();
+});
+</script>
+
+</body>
+</html>
